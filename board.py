@@ -12,6 +12,8 @@ class Plateau:
             [-1, -1,  1,  1,  1, -1, -1]
         ]
         self.historique = []  # Stocke les mouvements effectués
+        self.nb_coups_solution = 0  # Nombre de coups pour résoudre le jeu
+        self.nb_operations = 0 
         
     def afficher_plateau(self):
         for row in self.board:
@@ -56,6 +58,8 @@ class Plateau:
             self.board[x2][y2] = 1  
         else:
             print("Indice invalide : Aucun déplacement effectué.")
+        self.nb_coups_solution += 1  # Nombre de coups pour résoudre le jeu
+        self.nb_operations += 1
 
     def annuler_deplacement(self):
         if not self.historique:
@@ -71,7 +75,10 @@ class Plateau:
         # Annuler le mouvement sur le plateau
         self.board[x1][y1] = 1  
         self.board[mx][my] = 1  
-        self.board[x2][y2] = 0  
+        self.board[x2][y2] = 0 
+
+        self.nb_coups_solution -= 1  # Nombre de coups pour résoudre le jeu
+        self.nb_operations += 1  
 
     #Verifie si le jeu est résolu
     def est_solved(self):
@@ -87,6 +94,8 @@ class Plateau:
     #Resolution du jeu en s'appuiyant sur le Backtracking
     def resoudre(self):
         if self.est_solved():
+            print(f"Plateau résolu en {self.nb_coups_solution} coups.")
+            print(f"Nombre total d'opérations (y compris les annulations) : {self.nb_operations}")
             return True  # Plateau résolu si la dernière bille est dans la case centrale.
 
         mouvements = self.movements_possible()
