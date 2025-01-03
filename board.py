@@ -73,4 +73,35 @@ class Plateau:
         self.board[mx][my] = 1  
         self.board[x2][y2] = 0  
 
+    #Verifie si le jeu est résolu
+    def est_solved(self):
+        
+        # Compter le nombre total de billes sur le plateau
+        compteur = sum(row.count(1) for row in self.board)
+        if compteur != 1:
+            return False
 
+        # Vérifier si la dernière bille est dans la case centrale
+        return self.board[3][3] == 1
+
+    #Resolution du jeu en s'appuiyant sur le Backtracking
+    def resoudre(self):
+        if self.est_solved():
+            return True  # Plateau résolu si la dernière bille est dans la case centrale.
+
+        mouvements = self.movements_possible()
+        if not mouvements:
+            return False  # Si aucun mouvement n'est possible, échec.
+
+        for (x1, y1), (x2, y2) in mouvements:
+            # Appliquer le mouvement
+            self.effectuer_deplacement(mouvements, mouvements.index(((x1, y1), (x2, y2))))
+
+            # Appel récursif pour continuer la résolution
+            if self.resoudre():
+                return True  # Solution trouvée.
+
+            # Annuler le mouvement si cela ne mène pas à une solution
+            self.annuler_deplacement()
+
+        return False  # Aucun mouvement ne mène à une solution
